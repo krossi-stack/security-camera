@@ -1,0 +1,2 @@
+-r phase3.txt
+python-kasa>=0.10.0

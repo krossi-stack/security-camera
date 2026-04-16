@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+
+# Runtime logs and recordings
+logs/
+
+# YOLO model weights (large binary, download via ultralytics)
+*.pt
+
+# Claude Code project config
+.claude/

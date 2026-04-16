@@ -1,0 +1,2 @@
+-r phase2.txt
+ultralytics>=8.0.200
