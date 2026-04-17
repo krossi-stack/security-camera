@@ -67,9 +67,9 @@ The pipeline runs on Jetson Orin Nano for low-power 24/7 operation with hardware
 - JetPack 6 (L4T 36.x) flashed via SDK Manager
 
 ```bash
-# 1. Install FFmpeg (PyTorch bundles its own CUDA runtime)
+# 1. Install FFmpeg and venv support (PyTorch bundles its own CUDA runtime)
 sudo apt update
-sudo apt install ffmpeg
+sudo apt install ffmpeg python3.10-venv
 
 # 2. Create a virtual env (--system-site-packages keeps NVIDIA's CUDA bindings visible)
 python3 -m venv --system-site-packages venv
