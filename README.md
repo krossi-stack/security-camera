@@ -65,20 +65,23 @@ The pipeline runs on Jetson Orin Nano for low-power 24/7 operation with hardware
 
 **Prerequisites:**
 - JetPack 6 (L4T 36.x) flashed via SDK Manager
-- FFmpeg with NVIDIA codec support (included in JetPack)
 
 ```bash
-# 1. Create a virtual env (--system-site-packages keeps NVIDIA's CUDA bindings visible)
+# 1. Install CUDA and FFmpeg (may already be present depending on JetPack install)
+sudo apt update
+sudo apt install nvidia-cuda-toolkit ffmpeg
+
+# 2. Create a virtual env (--system-site-packages keeps NVIDIA's CUDA bindings visible)
 python3 -m venv --system-site-packages venv
 source venv/bin/activate
 
-# 2. Install PyTorch from NVIDIA's ARM64 wheel index
+# 3. Install PyTorch from NVIDIA's ARM64 wheel index
 pip install torch torchvision --index-url https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/
 
-# 3. Install remaining dependencies
+# 4. Install remaining dependencies
 pip install -r requirements/jetson.txt
 
-# 4. Create a .env file (see .env.example for all options)
+# 5. Create a .env file (see .env.example for all options)
 cp .env.example .env
 # Edit .env with your camera IP, plug IP, etc.
 ```
