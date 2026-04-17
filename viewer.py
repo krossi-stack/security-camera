@@ -1,8 +1,8 @@
-"""Phase 1: View the camera feed in an OpenCV window.
+"""View the camera feed in an OpenCV window.
 
 Usage:
     1. Edit config.py with your camera's RTSP URL.
-    2. pip install -r requirements/base.txt
+    2. pip install -r requirements/windows.txt
     3. python viewer.py
 
 Press 'q' to quit.

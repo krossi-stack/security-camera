@@ -1,7 +1,7 @@
 """Phase 2: Serve the camera feed as MJPEG over HTTP.
 
 Usage:
-    pip install -r requirements/phase2.txt
+    pip install -r requirements/windows.txt
     uvicorn server:app --host 0.0.0.0 --port 8000
 
 Then open http://<your-pc-ip>:8000 from any device on the network.

@@ -36,32 +36,27 @@ The PC connects to the camera over Ethernet and re-serves the annotated feed ove
 - FFmpeg (required for HLS web streaming)
 - Windows 11 (tested on PC), Jetson Orin Nano with JetPack 6 (tested)
 
-### Installing FFmpeg (Windows only — included in JetPack on Jetson)
-
-```bash
-winget install ffmpeg
-```
-
-Restart your terminal after installing so it's on PATH.
-
 ## Installation
 
 ### Windows
 
 ```bash
-# 1. Create a virtual environment
+# 1. Install FFmpeg
+winget install ffmpeg
+# Restart your terminal after installing so it's on PATH
+
+# 2. Create a virtual environment
 python -m venv venv
 venv\Scripts\activate
 
-# 2. Install dependencies (phase 4 includes everything)
-pip install -r requirements/phase4.txt
+# 3. Install dependencies
+pip install -r requirements/windows.txt
 ```
 
 **GPU Support (Optional)** — for faster detection with an NVIDIA GPU:
 
 ```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-pip install -r requirements/phase3.txt
 ```
 
 ### Jetson Orin Nano (JetPack 6)
@@ -227,11 +222,8 @@ computer_vision/
   pipeline.py        — Main orchestrator: capture + detect + record + stream
   .env.example       — Template for environment variable overrides
   requirements/
-    base.txt         — opencv, numpy, python-dotenv
-    phase2.txt       — + fastapi, uvicorn
-    phase3.txt       — + ultralytics (YOLO + PyTorch)
-    phase4.txt       — + python-kasa
-    jetson.txt       — Flat requirements for Jetson Orin Nano
+    windows.txt      — All dependencies for Windows
+    jetson.txt       — All dependencies for Jetson Orin Nano
   logs/
     events/          — Detection event clips saved here
     hls/             — Temporary HLS segments (auto-cleaned)
