@@ -1,5 +1,7 @@
 # Jetson Orin Nano (JetPack 6 / L4T 36.x)
-# Install PyTorch first from NVIDIA's ARM64 wheel index:
+# Create a venv first to avoid clobbering system packages:
+#   python3 -m venv --system-site-packages venv && source venv/bin/activate
+# Install PyTorch from NVIDIA's ARM64 wheel index:
 #   pip install torch torchvision --index-url https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/
 # Then install this file:
 #   pip install -r requirements/jetson.txt
