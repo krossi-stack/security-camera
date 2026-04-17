@@ -76,7 +76,10 @@ python3 -m venv --system-site-packages venv
 source venv/bin/activate
 
 # 3. Install PyTorch from NVIDIA's ARM64 wheel index
-pip install torch torchvision --index-url https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/
+# Try --index-url first; if "no matching distribution" use -f instead
+pip install torch torchvision --index-url https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/
+# Fallback:
+# pip install --no-cache-dir torch torchvision -f https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/
 
 # 4. Install remaining dependencies
 pip install -r requirements/jetson.txt
