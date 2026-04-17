@@ -46,20 +46,18 @@ Restart your terminal after installing so it's on PATH.
 
 ## Installation
 
+### Windows
+
 ```bash
-# Phase 1-2: View feed + web streaming
-pip install -r requirements/phase2.txt
+# 1. Create a virtual environment
+python -m venv venv
+venv\Scripts\activate
 
-# Phase 3: Person detection (large download — includes PyTorch)
-pip install -r requirements/phase3.txt
-
-# Phase 4: Smart plug control
+# 2. Install dependencies (phase 4 includes everything)
 pip install -r requirements/phase4.txt
 ```
 
-### GPU Support (Optional)
-
-For faster detection with an NVIDIA GPU:
+**GPU Support (Optional)** — for faster detection with an NVIDIA GPU:
 
 ```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
