@@ -34,7 +34,7 @@ The PC connects to the camera over Ethernet and re-serves the annotated feed ove
 
 - Python 3.12+
 - FFmpeg (required for HLS web streaming)
-- Windows 11 (tested), should work on Linux/Mac with minor path changes
+- Windows 11 (tested on PC), Jetson Orin Nano with JetPack 6 (tested)
 
 ### Installing FFmpeg
 
@@ -65,6 +65,34 @@ For faster detection with an NVIDIA GPU:
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements/phase3.txt
 ```
+
+### Jetson Orin Nano (JetPack 6)
+
+The pipeline runs on Jetson Orin Nano for low-power 24/7 operation with hardware-accelerated detection and encoding.
+
+**Prerequisites:**
+- JetPack 6 (L4T 36.x) flashed via SDK Manager
+- FFmpeg with NVIDIA codec support (included in JetPack)
+
+```bash
+# 1. Install PyTorch from NVIDIA's ARM64 wheel index
+pip install torch torchvision --index-url https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/
+
+# 2. Install remaining dependencies
+pip install -r requirements/jetson.txt
+
+# 3. Create a .env file (see .env.example for all options)
+cp .env.example .env
+# Edit .env with your camera IP, plug IP, etc.
+```
+
+Run headless:
+
+```bash
+python pipeline.py --serve --no-display
+```
+
+The pipeline auto-detects the Jetson and uses the hardware H.264 encoder (`h264_nvmpi`) for event recording. Override with `FFMPEG_ENCODER` in `.env` if needed.
 
 ## Camera Setup
 
@@ -155,7 +183,7 @@ The web feed uses HLS (HTTP Live Streaming) instead of MJPEG. Annotated frames a
 
 ## Configuration
 
-All settings are in `config.py`:
+All settings are in `config.py` and can be overridden via environment variables or a `.env` file (see `.env.example`):
 
 | Setting | Default | Description |
 |---|---|---|
@@ -169,6 +197,8 @@ All settings are in `config.py`:
 | `YOLO_MODEL` | `yolov8n.pt` | YOLO model size |
 | `DETECTION_CONFIDENCE` | `0.45` | Min confidence for display overlays |
 | `DETECT_EVERY_N_FRAMES` | `3` | Controls detection frequency |
+| `FFMPEG_ENCODER` | `auto` | H.264 encoder (`auto`, `libx264`, `h264_nvmpi`, etc.) |
+| `MJPEG_QUALITY` | `80` | JPEG quality for standalone MJPEG server |
 | `EVENT_DIR` | `logs/events` | Where event clips are saved |
 | `EVENT_PRE_ROLL` | `5` | Seconds of footage before detection in clips |
 | `EVENT_POST_ROLL` | `10` | Seconds after last detection in clips |
@@ -192,11 +222,13 @@ computer_vision/
   detector.py        — YOLOv8 person detection wrapper
   actions.py         — Smart plug control with cooldown and scheduling
   pipeline.py        — Main orchestrator: capture + detect + record + stream
+  .env.example       — Template for environment variable overrides
   requirements/
-    base.txt         — opencv, numpy
+    base.txt         — opencv, numpy, python-dotenv
     phase2.txt       — + fastapi, uvicorn
     phase3.txt       — + ultralytics (YOLO + PyTorch)
     phase4.txt       — + python-kasa
+    jetson.txt       — Flat requirements for Jetson Orin Nano
   logs/
     events/          — Detection event clips saved here
     hls/             — Temporary HLS segments (auto-cleaned)
@@ -234,5 +266,4 @@ computer_vision/
 
 ## Future Work
 
-- **Jetson deployment:** Move the pipeline to an NVIDIA Jetson Orin Nano for low-power 24/7 operation with GPU-accelerated detection
 - **Notifications:** Push notifications when a person is detected during alert hours

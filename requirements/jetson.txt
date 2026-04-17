@@ -1,0 +1,14 @@
+# Jetson Orin Nano (JetPack 6 / L4T 36.x)
+# Install PyTorch first from NVIDIA's ARM64 wheel index:
+#   pip install torch torchvision --index-url https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/
+# Then install this file:
+#   pip install -r requirements/jetson.txt
+
+opencv-python-headless>=4.8.0
+numpy>=1.24.0
+python-dotenv>=1.0.0
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+jinja2>=3.1.0
+ultralytics>=8.0.200
+python-kasa>=0.10.0

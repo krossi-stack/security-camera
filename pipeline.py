@@ -50,6 +50,7 @@ from config import (
     EVENT_MAX_DAYS,
     EVENT_CONFIDENCE,
     EVENT_SUSTAIN_SECONDS,
+    FFMPEG_ENCODER,
 )
 
 logging.basicConfig(
@@ -57,6 +58,19 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger(__name__)
+
+
+def _resolve_encoder() -> str:
+    """Pick the ffmpeg H.264 encoder for this platform.
+
+    If FFMPEG_ENCODER is set to something other than "auto", use it directly.
+    Otherwise auto-detect: Jetson Tegra -> h264_nvmpi, else -> libx264.
+    """
+    if FFMPEG_ENCODER != "auto":
+        return FFMPEG_ENCODER
+    if Path("/etc/nv_tegra_release").exists():
+        return "h264_nvmpi"
+    return "libx264"
 
 
 # ======================================================================
@@ -86,6 +100,7 @@ class EventRecorder:
         fps: float,
         min_confidence: float,
         sustain_seconds: float,
+        encoder: str = "libx264",
     ):
         self.event_dir = Path(event_dir)
         self.event_dir.mkdir(parents=True, exist_ok=True)
@@ -94,6 +109,7 @@ class EventRecorder:
         self.fps = fps
         self.min_confidence = min_confidence
         self.sustain_seconds = sustain_seconds
+        self._encoder = encoder
 
         self._frame_interval = 1.0 / fps
         self.buffer: deque = deque(maxlen=int(pre_roll * fps))
@@ -173,7 +189,7 @@ class EventRecorder:
             "-framerate", str(self.fps),
             "-i", "pipe:0",
             "-pix_fmt", "yuv420p",
-            "-c:v", "libx264",
+            "-c:v", self._encoder,
             "-preset", "ultrafast",
             "-movflags", "+faststart",
             str(self._clip_path),
@@ -542,11 +558,15 @@ def main():
 
     detector = PersonDetector(model_name=YOLO_MODEL, confidence=DETECTION_CONFIDENCE)
 
+    encoder = _resolve_encoder()
+    logger.info("Using ffmpeg encoder: %s", encoder)
+
     recorder = None
     if not args.no_record:
         recorder = EventRecorder(
             EVENT_DIR, EVENT_PRE_ROLL, EVENT_POST_ROLL, CAMERA_FPS,
             EVENT_CONFIDENCE, EVENT_SUSTAIN_SECONDS,
+            encoder=encoder,
         )
 
     action_manager = None

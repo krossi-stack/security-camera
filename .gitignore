@@ -7,5 +7,8 @@ logs/
 # YOLO model weights (large binary, download via ultralytics)
 *.pt
 
+# Environment overrides (may contain IPs/credentials)
+.env
+
 # Claude Code project config
 .claude/
