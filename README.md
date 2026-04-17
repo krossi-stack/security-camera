@@ -36,7 +36,7 @@ The PC connects to the camera over Ethernet and re-serves the annotated feed ove
 - FFmpeg (required for HLS web streaming)
 - Windows 11 (tested on PC), Jetson Orin Nano with JetPack 6 (tested)
 
-### Installing FFmpeg
+### Installing FFmpeg (Windows only — included in JetPack on Jetson)
 
 ```bash
 winget install ffmpeg
