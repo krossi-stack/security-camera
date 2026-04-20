@@ -190,15 +190,17 @@ class EventRecorder:
             "-i", "pipe:0",
             "-pix_fmt", "yuv420p",
             "-c:v", self._encoder,
-            "-preset", "ultrafast",
-            "-movflags", "+faststart",
-            str(self._clip_path),
         ]
+        if self._encoder == "libx264":
+            cmd += ["-preset", "ultrafast"]
+        cmd += ["-movflags", "+faststart", str(self._clip_path)]
+        logger.debug("Event recorder cmd: %s", " ".join(cmd))
+        self._stderr_log = open("/tmp/event_ffmpeg.log", "w")
         self._writer = subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stderr=self._stderr_log,
         )
         self._clip_start = time.time()
         logger.info("Event recording started: %s", self._clip_path.name)
@@ -222,6 +224,19 @@ class EventRecorder:
             self._writer.wait(timeout=10)
         except subprocess.TimeoutExpired:
             self._writer.kill()
+            self._writer.wait()
+        if hasattr(self, "_stderr_log") and self._stderr_log:
+            self._stderr_log.close()
+            self._stderr_log = None
+        if self._writer.returncode != 0:
+            stderr_output = ""
+            try:
+                with open("/tmp/event_ffmpeg.log") as f:
+                    stderr_output = f.read()
+            except OSError:
+                pass
+            logger.error("FFmpeg event encoder failed (rc=%d): %s",
+                         self._writer.returncode, stderr_output[-500:] if stderr_output else "(no output)")
         duration = time.time() - self._clip_start
         logger.info("Saved event clip: %s (%.1fs)", self._clip_path.name, duration)
         self._writer = None

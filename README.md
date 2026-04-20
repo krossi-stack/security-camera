@@ -75,8 +75,10 @@ sudo apt install ffmpeg python3.10-venv
 python3 -m venv --system-site-packages venv
 source venv/bin/activate
 
-# 3. Install PyTorch from NVIDIA's ARM64 wheel index
-pip install --no-cache-dir torch torchvision -f https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/
+# 3. Install PyTorch for CUDA 12.6 from the Jetson AI Lab wheel index
+pip install --upgrade pip setuptools wheel
+pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 \
+  --index-url https://pypi.jetson-ai-lab.io/jp6/cu126
 
 # 4. Install remaining dependencies
 pip install -r requirements/jetson.txt

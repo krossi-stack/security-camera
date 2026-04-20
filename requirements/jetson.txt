@@ -1,13 +1,14 @@
-# Jetson Orin Nano (JetPack 6 / L4T 36.x)
+# Jetson Orin Nano (JetPack 6 / L4T 36.x / CUDA 12.6)
 # Create a venv first to avoid clobbering system packages:
 #   python3 -m venv --system-site-packages venv && source venv/bin/activate
-# Install PyTorch from NVIDIA's ARM64 wheel index:
-#   pip install --no-cache-dir torch torchvision -f https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/
+# Install PyTorch from the Jetson AI Lab wheel index:
+#   pip install --upgrade pip setuptools wheel
+#   pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://pypi.jetson-ai-lab.io/jp6/cu126
 # Then install this file:
 #   pip install -r requirements/jetson.txt
 
 opencv-python-headless>=4.8.0
-numpy>=1.24.0
+numpy>=1.24.0,<2.0
 python-dotenv>=1.0.0
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
